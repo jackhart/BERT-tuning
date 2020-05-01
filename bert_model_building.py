@@ -71,7 +71,7 @@ def create_model(bert_config, is_training, input_ids, input_mask, segment_ids,
 
 def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
                      num_train_steps, num_warmup_steps, use_tpu,
-                     use_one_hot_embeddings):
+                     use_one_hot_embeddings, train_layers):
     """Returns `model_fn` closure for TPUEstimator."""
 
     def model_fn(features, labels, mode, params):  # pylint: disable=unused-argument
@@ -97,7 +97,11 @@ def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
             bert_config, is_training, input_ids, input_mask, segment_ids, label_ids,
             num_labels, use_one_hot_embeddings)
 
-        tvars = tf.trainable_variables()
+        #tvars = tf.trainable_variables()
+        tvars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,
+                                         train_layers)
+
+
         initialized_variable_names = {}
         scaffold_fn = None
         if init_checkpoint:

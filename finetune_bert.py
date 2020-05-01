@@ -23,8 +23,8 @@ from __future__ import division
 from __future__ import print_function
 
 
-from .bert_input_processing import *
-from .bert_model_building import *
+from bert_input_processing import *
+from bert_model_building import *
 import tensorflow as tf
 
 
@@ -51,6 +51,11 @@ flags.DEFINE_string(
     "The output directory where the model checkpoints will be written.")
 
 ## Other parameters
+
+flags.DEFINE_string(                                    # ADDITIONAL FUNCTIONALITY
+    "train_layers", r"^(?!bert).*$",
+    "regular expression of the BERT layers to train, default is all layers frozen")
+
 
 flags.DEFINE_string(
     "init_checkpoint", None,
@@ -92,7 +97,7 @@ def main(_):
 
     # Define constants
     MAX_SEQ_LENGTH = 128
-    LOWER_CASE = True
+    LOWER_CASE = False
     MASTER = None
     TPU = False
     TPU_CLUSTER = None
@@ -143,7 +148,8 @@ def main(_):
         num_train_steps=num_train_steps,
         num_warmup_steps=num_warmup_steps,
         use_tpu=TPU,
-        use_one_hot_embeddings=TPU)
+        use_one_hot_embeddings=TPU,
+        train_layers=FLAGS.train_layers)
 
     # If TPU is not available, this will fall back to normal Estimator on CPU
     # or GPU.
