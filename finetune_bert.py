@@ -13,9 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """BERT finetuning runner.
-
 @Jack -- Cleaned up script and added functionality for layer specific tuning.
-
 """
 
 from __future__ import absolute_import
